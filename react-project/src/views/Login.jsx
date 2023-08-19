@@ -1,9 +1,23 @@
 
+import { useState } from 'react'
 import './Login.css'
-
 import { UserIcon} from '@heroicons/react/24/solid'
+import axios from "../api/axios"
 export default function Login() {
-  
+  const[email,setEmail]=useState("");
+  const[password,setPassword]=useState("");
+
+const handleLogin = async (event) =>{
+  event.preventDefault();
+  try{
+    await axios.post('/login',{email,password});
+    setEmail("")
+    setPassword("")
+  }catch(e){
+    console.log(e);
+
+  }
+};
   return (
     <>
     <div className="main-container">
@@ -15,7 +29,7 @@ export default function Login() {
         </div>
 
         <div className="form-container">
-          <form className="form" action="#" method="POST">
+          <form onSubmit={handleLogin} className="form" action="#" method="POST">
           <div className='mail-div'>
               <label htmlFor="email" className="block-text">
                 Email Address
@@ -25,6 +39,8 @@ export default function Login() {
                   id="email"
                   name="email"
                   type="email"
+                  value={email}
+                  onChange={(e)=>setEmail(e.target.value)}
                   autoComplete="email"
                   required
                   className="input "
@@ -45,6 +61,8 @@ export default function Login() {
                   id="password"
                   name="password"
                   type="password"
+                  value={password}
+                  onChange={(e)=>setPassword(e.target.value)}
                   autoComplete="current-password"
                   required
                   className="input"

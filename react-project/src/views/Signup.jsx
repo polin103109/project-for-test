@@ -1,12 +1,13 @@
 import './App.css'
 import {Link} from 'react-router-dom'
-import axiosClient from '../axios'
+import axiosClient from '../api/axios'
 import { UserIcon} from '@heroicons/react/24/solid'
 import { useState } from 'react'
-import router from '../router'
+
 
 
 export default function SignUp() {
+  
   const [firstName,setFirstName] =useState('');
   const [lastName,setLastName] =useState('');
   const [address,setAddress] =useState('');
@@ -18,7 +19,7 @@ export default function SignUp() {
 const onSubmit = (event) => {
    event.preventDefault();
    setError({__html: ""})
-  axiosClient.post('/registration',{
+  axiosClient.post('http://localhost:8000',{
     firstName:firstName,
     lastName:lastName,
     address:address,
