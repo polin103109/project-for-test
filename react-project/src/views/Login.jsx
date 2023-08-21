@@ -1,36 +1,51 @@
 
-import { useState } from 'react'
-import './Login.css'
-import { UserIcon} from '@heroicons/react/24/solid'
-import axios from "../api/axios"
+import { useState } from 'react';
+import './Login.css';
+import { UserIcon } from '@heroicons/react/24/solid';
+
 export default function Login() {
-  const[email,setEmail]=useState("");
-  const[password,setPassword]=useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-const handleLogin = async (event) =>{
-  event.preventDefault();
-  try{
-    await axios.post('/login',{email,password});
-    setEmail("")
-    setPassword("")
-  }catch(e){
-    console.log(e);
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    const requestData = {
+      email: email,
+      password: password,
+    };
+    console.log("string",requestData);
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
-  }
-};
+  const handleClear = () => {
+    setEmail('');
+    setPassword('');
+  };
+
   return (
     <>
-    <div className="main-container">
+      <div className="main-container">
         <div className="header">
-        <UserIcon className='userIcon'/>
-          <h2 className="Head">
-            Login Panel
-          </h2>
+          <UserIcon className="userIcon" />
+          <h2 className="Head">Login Panel</h2>
         </div>
 
         <div className="form-container">
           <form onSubmit={handleLogin} className="form" action="#" method="POST">
-          <div className='mail-div'>
+            <div className="mail-div">
               <label htmlFor="email" className="block-text">
                 Email Address
               </label>
@@ -40,21 +55,19 @@ const handleLogin = async (event) =>{
                   name="email"
                   type="email"
                   value={email}
-                  onChange={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
-                  required
-                  className="input "
+                
+                  className="input"
                 />
               </div>
             </div>
-          
 
-            <div className='mail-div'> 
+            <div className="mail-div">
               <div className="pass-div">
                 <label htmlFor="password" className="block-text">
                   Password
                 </label>
-                
               </div>
               <div className="password-div">
                 <input
@@ -62,26 +75,17 @@ const handleLogin = async (event) =>{
                   name="password"
                   type="password"
                   value={password}
-                  onChange={(e)=>setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
-                  required
                   className="input"
                 />
               </div>
             </div>
 
             <div className="button-div">
-              <button
-                type="submit"
-                className=""
-              >
-                Login
-              </button>
-              <button
-                type="submit"
-                className=""
-              >
-                CLear
+              <button type="submit">Login</button>
+              <button type="button" onClick={handleClear}>
+                Clear
               </button>
             </div>
           </form>
@@ -92,9 +96,8 @@ const handleLogin = async (event) =>{
               Register Now
             </a>
           </p>
-         
         </div>
       </div>
     </>
-  )
+  );
 }

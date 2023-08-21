@@ -1,6 +1,6 @@
 import './App.css'
-import {Link} from 'react-router-dom'
-import axiosClient from '../api/axios'
+import {Link,useNavigate} from 'react-router-dom'
+import axios from "../api/axios"
 import { UserIcon} from '@heroicons/react/24/solid'
 import { useState } from 'react'
 
@@ -10,30 +10,24 @@ export default function SignUp() {
   
   const [firstName,setFirstName] =useState('');
   const [lastName,setLastName] =useState('');
-  const [address,setAddress] =useState('');
-  const [phone,setPhone] =useState('');
   const [email,setEmail] =useState('');
-  const [birthdate,setBirthdate] =useState('');
   const [password,setPassword] =useState('');
-  const [error,setError] =useState({__html: ""});
-const onSubmit = (event) => {
+  const navigate = useNavigate();
+ 
+const handleRegister = async (event) => {
    event.preventDefault();
-   setError({__html: ""})
-  axiosClient.post('http://localhost:8000',{
-    firstName:firstName,
-    lastName:lastName,
-    address:address,
-    phone:phone,
-    email,
-    birthdate:birthdate,
-    password,
-})
-.then(({data}) => {
-  console.log(data)
-})
-.catch((error) => {
-  console.log(error);
-} );
+   try{
+    await axios.post('/api/signup',{firstName,lastName,email,password});
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    navigate("/");
+  }catch(error){
+    console.log(error);
+
+  }
+
 };
   
   return (
@@ -54,7 +48,7 @@ const onSubmit = (event) => {
         </div>
 
         <div className="form-container">
-          <form  onSubmit={onSubmit} className="form" action="#" method="POST">
+          <form  onSubmit={handleRegister} className="form" action="#" method="POST">
           <div className='mail-div'>
               <label htmlFor="name" className="block-text">
                 First Name
@@ -62,6 +56,8 @@ const onSubmit = (event) => {
               <div className="email-div">
                 <input
                   id="name"
+                  value={firstName}
+                  onChange={(e)=>setFirstName(e.target.value)}
                   name="name"
                   type="text"
                   autoComplete="name"
@@ -78,6 +74,8 @@ const onSubmit = (event) => {
                 <input
                   id="name"
                   name="name"
+                  value={lastName}
+                  onChange={(e)=>setLastName(e.target.value)}
                   type="text"
                   autoComplete="name"
                   required
@@ -85,36 +83,8 @@ const onSubmit = (event) => {
                 />
               </div>
             </div>
-            <div className='mail-div'>
-              <label htmlFor="address" className="block-text">
-                Address
-              </label>
-              <div className="email-div">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  className="input "
-                />
-              </div>
-            </div>
-            <div className='mail-div'>
-              <label htmlFor="phone" className="block-text">
-                Phone
-              </label>
-              <div className="email-div">
-                <input
-                  id="name"
-                  name="name"
-                  type="number"
-                  autoComplete="name"
-                  required
-                  className="input "
-                />
-              </div>
-            </div>
+           
+            
             <div className='mail-div'>
               <label htmlFor="email" className="block-text">
                 Email address
@@ -123,6 +93,8 @@ const onSubmit = (event) => {
                 <input
                   id="email"
                   name="email"
+                  value={email}
+                  onChange={(e)=>setEmail(e.target.value)}
                   type="email"
                   autoComplete="email"
                   required
@@ -130,22 +102,7 @@ const onSubmit = (event) => {
                 />
               </div>
             </div>
-            <div className='mail-div'>
-              <label htmlFor="address" className="block-text">
-                Birthdate
-              </label>
-              <div className="email-div">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  className="input "
-                />
-                  
-              </div>
-            </div>
+           
 
             <div className='mail-div'> 
               <div className="pass-div">
@@ -158,6 +115,8 @@ const onSubmit = (event) => {
                 <input
                   id="password"
                   name="password"
+                  value={password}
+                  onChange={(e)=>setPassword(e.target.value)}
                   type="password"
                   autoComplete="current-password"
                   required
